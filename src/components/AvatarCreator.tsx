@@ -16,6 +16,7 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
   const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
   const [script, setScript] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [faceAnalysis, setFaceAnalysis] = useState<any>(null);
 
   const steps = [
     { id: 1, name: 'Upload Photo', component: PhotoUpload },
@@ -48,13 +49,36 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
   const getCurrentComponent = () => {
     switch (currentStep) {
       case 1:
-        return <PhotoUpload onPhotoUpload={setUploadedPhoto} uploadedPhoto={uploadedPhoto} />;
+        return (
+          <PhotoUpload 
+            onPhotoUpload={setUploadedPhoto} 
+            uploadedPhoto={uploadedPhoto}
+          />
+        );
       case 2:
-        return <VoiceInput onVoiceSelect={setSelectedVoice} selectedVoice={selectedVoice} />;
+        return (
+          <VoiceInput 
+            onVoiceSelect={setSelectedVoice} 
+            selectedVoice={selectedVoice}
+            faceAnalysis={faceAnalysis}
+          />
+        );
       case 3:
-        return <ScriptInput script={script} onScriptChange={setScript} />;
+        return (
+          <ScriptInput 
+            script={script} 
+            onScriptChange={setScript}
+            faceAnalysis={faceAnalysis}
+          />
+        );
       case 4:
-        return <VideoPreview isGenerating={isGenerating} onUpgrade={onUpgrade} />;
+        return (
+          <VideoPreview 
+            isGenerating={isGenerating} 
+            onUpgrade={onUpgrade}
+            faceAnalysis={faceAnalysis}
+          />
+        );
       default:
         return null;
     }

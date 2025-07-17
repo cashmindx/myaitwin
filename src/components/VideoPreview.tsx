@@ -42,7 +42,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
           <div className="bg-black/50 rounded-2xl p-8 border border-white/20">
             <div className="aspect-video bg-gradient-to-br from-purple-900 to-blue-900 rounded-lg flex items-center justify-center relative overflow-hidden">
               <img
-                src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=400"
+                src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=400"
                 alt="AI Twin Preview"
                 className="w-full h-full object-cover"
               />
@@ -53,6 +53,11 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
                 >
                   <Play className="h-10 w-10 text-white ml-1" />
                 </button>
+              </div>
+              
+              {/* Gender-appropriate avatar indicator */}
+              <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+                <span className="text-white text-sm">👩 Female Avatar</span>
               </div>
             </div>
           </div>

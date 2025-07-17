@@ -30,6 +30,15 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
     }
   };
 
+  // Auto-play video when component mounts
+  React.useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Auto-play failed, user interaction required
+        console.log('Auto-play prevented by browser');
+      });
+    }
+  }, []);
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Animated background elements */}
@@ -52,16 +61,25 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                     className="w-full h-full object-cover"
                     muted={isMuted}
                     loop
+                    autoPlay
                     playsInline
                     poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=800"
                     onPlay={() => setIsVideoPlaying(true)}
                     onPause={() => setIsVideoPlaying(false)}
                     onClick={() => setShowVideoModal(true)}
+                    onLoadedData={() => {
+                      // Ensure video plays when loaded
+                      if (videoRef.current) {
+                        videoRef.current.play().catch(() => {
+                          console.log('Video play failed');
+                        });
+                      }
+                    }}
                   >
                     {/* Add your video source here */}
                     <source src="/welcome-video.mp4" type="video/mp4" />
-                    {/* Fallback for browsers that don't support MP4 */}
-                    <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4" />
+                    {/* Fallback video */}
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   

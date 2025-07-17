@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Upload, Camera, X } from 'lucide-react';
+import { FaceAnalysis } from './FaceAnalysis';
 
 interface PhotoUploadProps {
   onPhotoUpload: (photo: string) => void;
@@ -8,6 +9,8 @@ interface PhotoUploadProps {
 
 export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onPhotoUpload, uploadedPhoto }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [faceAnalysis, setFaceAnalysis] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -50,28 +53,44 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onPhotoUpload, uploade
 
   const handleRemovePhoto = () => {
     onPhotoUpload('');
+    setShowAnalysis(false);
+    setFaceAnalysis(null);
   };
 
+  const handleAnalysisComplete = (analysis: any) => {
+    setFaceAnalysis(analysis);
+  };
   return (
-    <div className="text-center">
+    <div className="text-center space-y-8">
       <h2 className="text-3xl font-bold text-white mb-4">Upload Your Photo</h2>
       <p className="text-white/70 mb-8">
-        Choose a clear, front-facing photo for the best results
+        Choose a clear, front-facing photo. Our AI will analyze it to create the perfect avatar.
       </p>
 
       {uploadedPhoto ? (
-        <div className="relative inline-block">
-          <img
-            src={uploadedPhoto}
-            alt="Uploaded"
-            className="w-64 h-64 object-cover rounded-2xl border-4 border-purple-500/50"
-          />
-          <button
-            onClick={handleRemovePhoto}
-            className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
+        <div className="space-y-6">
+          <div className="relative inline-block">
+            <img
+              src={uploadedPhoto}
+              alt="Uploaded"
+              className="w-64 h-64 object-cover rounded-2xl border-4 border-purple-500/50"
+            />
+            <button
+              onClick={handleRemovePhoto}
+              className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          
+          {!showAnalysis && (
+            <button
+              onClick={() => setShowAnalysis(true)}
+              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-blue-600 transition-all duration-300"
+            >
+              Analyze Face with AI
+            </button>
+          )}
         </div>
       ) : (
         <div
@@ -112,6 +131,26 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onPhotoUpload, uploade
         onChange={handleFileSelect}
         className="hidden"
       />
+
+      {/* Face Analysis Section */}
+      {uploadedPhoto && showAnalysis && (
+        <div className="mt-8 bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+          <FaceAnalysis 
+            uploadedPhoto={uploadedPhoto} 
+            onAnalysisComplete={handleAnalysisComplete}
+          />
+        </div>
+      )}
+
+      {/* Analysis Summary */}
+      {faceAnalysis && (
+        <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-lg p-4 border border-purple-500/20">
+          <p className="text-white/90 text-sm">
+            ✨ <strong>AI Analysis Complete:</strong> {faceAnalysis.gender} avatar detected with {faceAnalysis.faceQuality}% quality score. 
+            Ready for realistic video generation!
+          </p>
+        </div>
+      )}
     </div>
   );
 };

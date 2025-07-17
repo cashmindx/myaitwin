@@ -4,9 +4,10 @@ import { Mic, Upload, Play, Pause, Volume2 } from 'lucide-react';
 interface VoiceInputProps {
   onVoiceSelect: (voice: string) => void;
   selectedVoice: string | null;
+  faceAnalysis?: any;
 }
 
-export const VoiceInput: React.FC<VoiceInputProps> = ({ onVoiceSelect, selectedVoice }) => {
+export const VoiceInput: React.FC<VoiceInputProps> = ({ onVoiceSelect, selectedVoice, faceAnalysis }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -14,12 +15,22 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({ onVoiceSelect, selectedV
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const prebuiltVoices = [
-    { id: 'sarah', name: 'Sarah', description: 'Professional, clear voice' },
-    { id: 'david', name: 'David', description: 'Warm, friendly tone' },
-    { id: 'emma', name: 'Emma', description: 'Energetic, youthful' },
-    { id: 'james', name: 'James', description: 'Deep, authoritative' },
+    { id: 'sarah', name: 'Sarah', description: 'Professional, clear voice', gender: 'female' },
+    { id: 'emma', name: 'Emma', description: 'Energetic, youthful', gender: 'female' },
+    { id: 'sophia', name: 'Sophia', description: 'Warm, friendly tone', gender: 'female' },
+    { id: 'isabella', name: 'Isabella', description: 'Confident, articulate', gender: 'female' },
+    { id: 'david', name: 'David', description: 'Warm, friendly tone', gender: 'male' },
+    { id: 'james', name: 'James', description: 'Deep, authoritative', gender: 'male' },
   ];
 
+  // Filter voices based on detected gender
+  const recommendedVoices = faceAnalysis 
+    ? prebuiltVoices.filter(voice => voice.gender === faceAnalysis.gender)
+    : prebuiltVoices;
+
+  const otherVoices = faceAnalysis 
+    ? prebuiltVoices.filter(voice => voice.gender !== faceAnalysis.gender)
+    : [];
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -76,9 +87,20 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({ onVoiceSelect, selectedV
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Prebuilt Voices */}
         <div>
-          <h3 className="text-xl font-semibold text-white mb-4">Prebuilt Voices</h3>
+          <h3 className="text-xl font-semibold text-white mb-4">
+            {faceAnalysis ? `Recommended ${faceAnalysis.gender} Voices` : 'Prebuilt Voices'}
+          </h3>
+          
+          {faceAnalysis && (
+            <div className="mb-4 p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
+              <p className="text-purple-300 text-sm">
+                🎯 Based on your photo analysis, we recommend these {faceAnalysis.gender} voices for the most realistic result.
+              </p>
+            </div>
+          )}
+          
           <div className="space-y-3">
-            {prebuiltVoices.map((voice) => (
+            {recommendedVoices.map((voice) => (
               <div
                 key={voice.id}
                 onClick={() => onVoiceSelect(voice.id)}
@@ -100,6 +122,36 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({ onVoiceSelect, selectedV
               </div>
             ))}
           </div>
+          
+          {/* Other Gender Voices */}
+          {otherVoices.length > 0 && (
+            <div className="mt-6">
+              <h4 className="text-lg font-medium text-white/80 mb-3">Other Voices</h4>
+              <div className="space-y-2">
+                {otherVoices.map((voice) => (
+                  <div
+                    key={voice.id}
+                    onClick={() => onVoiceSelect(voice.id)}
+                    className={`p-3 rounded-lg cursor-pointer transition-all duration-300 opacity-70 ${
+                      selectedVoice === voice.id
+                        ? 'bg-purple-500/20 border border-purple-400/50'
+                        : 'bg-white/5 border border-transparent hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <div className="font-medium text-white text-sm">{voice.name}</div>
+                        <div className="text-xs text-white/60">{voice.description}</div>
+                      </div>
+                      <button className="p-1 bg-purple-500/20 rounded-full hover:bg-purple-500/30 transition-colors">
+                        <Play className="h-3 w-3 text-purple-400" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Recording and Upload */}
