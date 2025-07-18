@@ -8,9 +8,16 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 interface AvatarCreatorProps {
   onUpgrade: () => void;
   onBack: () => void;
+  freeVideoUsed?: boolean;
+  onFreeVideoUsed?: () => void;
 }
 
-export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack }) => {
+export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ 
+  onUpgrade, 
+  onBack, 
+  freeVideoUsed = false,
+  onFreeVideoUsed 
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [uploadedPhoto, setUploadedPhoto] = useState<string | null>(null);
   const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
@@ -39,6 +46,12 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
 
   const handleGenerate = () => {
     setIsGenerating(true);
+    
+    // Mark free video as used
+    if (!freeVideoUsed && onFreeVideoUsed) {
+      onFreeVideoUsed();
+    }
+    
     // Simulate video generation
     setTimeout(() => {
       setIsGenerating(false);
@@ -75,7 +88,8 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
         return (
           <VideoPreview 
             isGenerating={isGenerating} 
-            onUpgrade={onUpgrade}
+            onUpgrade={onUpgrade} 
+            freeVideoUsed={freeVideoUsed}
             faceAnalysis={faceAnalysis}
           />
         );
@@ -104,12 +118,34 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
           <div className="flex items-center mb-8">
             <button
               onClick={onBack}
-              className="flex items-center text-white/80 hover:text-white transition-colors"
+              className={`flex items-center transition-colors ${
+                freeVideoUsed 
+                  ? 'text-red-400 hover:text-red-300' 
+                  : 'text-white/80 hover:text-white'
+              }`}
             >
               <ArrowLeft className="h-5 w-5 mr-2" />
-              Back to Home
+              {freeVideoUsed ? 'Upgrade Required' : 'Back to Home'}
             </button>
           </div>
+
+          {/* Free Video Used Warning */}
+          {freeVideoUsed && currentStep < 4 && (
+            <div className="mb-8 bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+              <div className="text-center">
+                <h3 className="text-red-300 font-bold mb-2">🚨 Free Video Already Used!</h3>
+                <p className="text-red-300/80 mb-4">
+                  You've used your 1 free video. To create more videos, please upgrade to a paid plan.
+                </p>
+                <button
+                  onClick={onUpgrade}
+                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-300"
+                >
+                  View Pricing Plans
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Progress Bar */}
           <div className="mb-8">
@@ -124,7 +160,9 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold border-2 ${
                       currentStep >= step.id
-                        ? 'bg-purple-500 border-purple-500 text-white'
+                        ? freeVideoUsed 
+                          ? 'bg-red-500 border-red-500 text-white'
+                          : 'bg-purple-500 border-purple-500 text-white'
                         : 'border-white/30 text-white/50'
                     }`}
                   >
@@ -140,7 +178,9 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
                   {step.id < steps.length && (
                     <div
                       className={`flex-1 h-1 mx-4 rounded ${
-                        currentStep > step.id ? 'bg-purple-500' : 'bg-white/20'
+                        currentStep > step.id 
+                          ? freeVideoUsed ? 'bg-red-500' : 'bg-purple-500'
+                          : 'bg-white/20'
                       }`}
                     />
                   )}
@@ -150,7 +190,11 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
           </div>
 
           {/* Current Step Content */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 mb-8">
+          <div className={`backdrop-blur-sm rounded-2xl p-8 border mb-8 ${
+            freeVideoUsed 
+              ? 'bg-red-500/5 border-red-500/20' 
+              : 'bg-white/5 border-white/10'
+          }`}>
             {getCurrentComponent()}
           </div>
 
@@ -162,6 +206,8 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
               className={`flex items-center px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                 currentStep === 1
                   ? 'bg-white/10 text-white/50 cursor-not-allowed'
+                  : freeVideoUsed
+                  ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
                   : 'bg-white/20 text-white hover:bg-white/30'
               }`}
             >
@@ -172,27 +218,34 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({ onUpgrade, onBack 
             {currentStep < 3 ? (
               <button
                 onClick={handleNext}
-                disabled={!canProceed()}
+                disabled={!canProceed() || freeVideoUsed}
                 className={`flex items-center px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  canProceed()
-                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600'
+                  canProceed() && !freeVideoUsed
+                    ? freeVideoUsed
+                      ? 'bg-red-500/20 text-red-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600'
                     : 'bg-white/10 text-white/50 cursor-not-allowed'
                 }`}
               >
-                Next
+                {freeVideoUsed ? 'Upgrade Required' : 'Next'}
                 <ArrowRight className="h-5 w-5 ml-2" />
               </button>
             ) : currentStep === 3 ? (
               <button
                 onClick={handleGenerate}
-                disabled={!canProceed() || isGenerating}
+                disabled={!canProceed() || isGenerating || freeVideoUsed}
                 className={`flex items-center px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  canProceed() && !isGenerating
+                  canProceed() && !isGenerating && !freeVideoUsed
                     ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600'
                     : 'bg-white/10 text-white/50 cursor-not-allowed'
                 }`}
               >
-                {isGenerating ? 'Generating...' : 'Generate Video'}
+                {freeVideoUsed 
+                  ? 'Upgrade Required' 
+                  : isGenerating 
+                  ? 'Generating...' 
+                  : 'Generate Free Video (5s)'
+                }
                 {!isGenerating && <ArrowRight className="h-5 w-5 ml-2" />}
               </button>
             ) : null}

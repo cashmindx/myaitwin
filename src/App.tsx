@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 function App() {
   const [currentStep, setCurrentStep] = useState<'hero' | 'create' | 'features' | 'pricing' | 'payment'>('hero');
   const [selectedPlan, setSelectedPlan] = useState<{name: string, price: string} | null>(null);
+  const [freeVideoUsed, setFreeVideoUsed] = useState(false);
 
   const handleGetStarted = () => {
     setCurrentStep('create');
@@ -29,7 +30,12 @@ function App() {
   };
 
   const handlePaymentSuccess = () => {
+    setFreeVideoUsed(false); // Reset free video when user upgrades
     setCurrentStep('create');
+  };
+
+  const handleFreeVideoUsed = () => {
+    setFreeVideoUsed(true);
   };
 
   const handleBack = () => {
@@ -67,7 +73,12 @@ function App() {
       )}
       
       {currentStep === 'create' && (
-        <AvatarCreator onUpgrade={handleUpgrade} onBack={handleBack} />
+        <AvatarCreator 
+          onUpgrade={handleUpgrade} 
+          onBack={handleBack}
+          freeVideoUsed={freeVideoUsed}
+          onFreeVideoUsed={handleFreeVideoUsed}
+        />
       )}
       
       {currentStep === 'pricing' && (

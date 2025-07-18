@@ -3,9 +3,10 @@ import { Check, ArrowLeft, Crown, Zap, Star, X } from 'lucide-react';
 
 interface PricingProps {
   onBack: () => void;
+  onPayment?: (plan: string, price: string) => void;
 }
 
-export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
+export const Pricing: React.FC<PricingProps> = ({ onBack, onPayment }) => {
   const plans = [
     {
       name: 'Free',
@@ -25,10 +26,12 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
         'Limited to 5 seconds',
         'Basic facial animation',
         'One-time use only',
+        'Must upgrade after first video',
       ],
       popular: false,
       icon: Zap,
       buttonText: 'Try Free',
+      highlight: 'Only 1 video allowed',
     },
     {
       name: 'Pro',
@@ -50,6 +53,7 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
       popular: true,
       icon: Crown,
       buttonText: 'Choose Pro',
+      highlight: '50 videos monthly',
     },
     {
       name: 'Studio',
@@ -73,15 +77,22 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
       popular: false,
       icon: Star,
       buttonText: 'Choose Studio',
+      highlight: '200 videos monthly',
     },
   ];
 
-  const handleYocoPayment = (planName: string, price: string) => {
-    // Yoco payment integration will be handled here
-    console.log(`Initiating Yoco payment for ${planName} plan - ${price}`);
+  const handlePayment = (planName: string, price: string) => {
+    if (planName === 'Free') {
+      // For free plan, just close pricing and go back to creator
+      onBack();
+      return;
+    }
     
-    // This will redirect to Yoco payment page or open Yoco modal
-    if (planName !== 'Free') {
+    // For paid plans, trigger payment flow
+    if (onPayment) {
+      onPayment(planName, price);
+    } else {
+      console.log(`Initiating payment for ${planName} plan - ${price}`);
       window.open(`/payment/yoco?plan=${planName}&price=${price}`, '_blank');
     }
   };
@@ -104,9 +115,16 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
             <h1 className="text-5xl font-bold text-white mb-4">
               Choose Your Epic Experience
             </h1>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Start for free and upgrade for higher resolution and more generations.
+            <p className="text-xl text-white/70 max-w-2xl mx-auto mb-6">
+              Start for free with 1 video (5 seconds), then upgrade for unlimited creation.
             </p>
+            
+            {/* Important Notice */}
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 max-w-2xl mx-auto">
+              <p className="text-red-300 font-medium">
+                ⚠️ Free Plan: After using your 1 free video, you must upgrade to continue creating
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -129,6 +147,17 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
                     </div>
                   )}
 
+                  {/* Plan Highlight */}
+                  <div className="absolute -top-2 -right-2">
+                    <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                      plan.name === 'Free' 
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
+                        : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                    }`}>
+                      {plan.highlight}
+                    </div>
+                  </div>
+
                   <div className="text-center mb-6">
                     <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                       <IconComponent className="h-8 w-8 text-purple-400" />
@@ -145,28 +174,41 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
                     {plan.features.map((feature, index) => (
                       <div key={index} className="flex items-center text-white/80">
                         <Check className="h-5 w-5 text-green-400 mr-3 flex-shrink-0" />
-                        <span>{feature}</span>
+                        <span className={feature.includes('1 video generation only') ? 'font-bold text-red-300' : ''}>
+                          {feature}
+                        </span>
                       </div>
                     ))}
                     
                     {plan.limitations?.map((limitation, index) => (
                       <div key={index} className="flex items-center text-white/60">
                         <X className="h-5 w-5 text-red-400 mr-3 flex-shrink-0" />
-                        <span className="text-sm">{limitation}</span>
+                        <span className="text-sm font-medium">{limitation}</span>
                       </div>
                     ))}
                   </div>
 
                   <button
-                    onClick={() => handleYocoPayment(plan.name, plan.price)}
+                    onClick={() => handlePayment(plan.name, plan.price)}
                     className={`w-full py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
                       plan.popular
                         ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600'
+                        : plan.name === 'Free'
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'
                         : 'bg-white/20 text-white hover:bg-white/30'
                     }`}
                   >
                     {plan.buttonText}
                   </button>
+
+                  {/* Free Plan Warning */}
+                  {plan.name === 'Free' && (
+                    <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                      <p className="text-yellow-300 text-xs text-center font-medium">
+                        🚨 After 1 video, upgrade required to continue
+                      </p>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -184,6 +226,27 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
                 <span>💳 Mastercard</span>
                 <span>💳 American Express</span>
                 <span>🔒 SSL Secured</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Upgrade Notice */}
+          <div className="mt-8 bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-2xl p-6 border border-red-500/20">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-white mb-4">⚡ Important: Free Plan Limitation</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                <div className="bg-white/5 rounded-lg p-4">
+                  <h4 className="text-white font-semibold mb-2">1️⃣ Step 1</h4>
+                  <p className="text-white/70 text-sm">Create your first 5-second video for FREE</p>
+                </div>
+                <div className="bg-white/5 rounded-lg p-4">
+                  <h4 className="text-white font-semibold mb-2">2️⃣ Step 2</h4>
+                  <p className="text-white/70 text-sm">After first video, choose a paid plan</p>
+                </div>
+                <div className="bg-white/5 rounded-lg p-4">
+                  <h4 className="text-white font-semibold mb-2">3️⃣ Step 3</h4>
+                  <p className="text-white/70 text-sm">Unlock unlimited video creation</p>
+                </div>
               </div>
             </div>
           </div>
