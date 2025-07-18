@@ -131,15 +131,15 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({
 
           {/* Free Video Used Warning */}
           {freeVideoUsed && currentStep < 4 && (
-            <div className="mb-8 bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+            <div className="mb-8 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
               <div className="text-center">
-                <h3 className="text-red-300 font-bold mb-2">🚨 Free Video Already Used!</h3>
-                <p className="text-red-300/80 mb-4">
-                  You've used your 1 free video. To create more videos, please upgrade to a paid plan.
+                <h3 className="text-yellow-300 font-bold mb-2">⚡ Monthly Limit Reached</h3>
+                <p className="text-yellow-300/80 mb-4">
+                  You've used your monthly generation limit. Upgrade to continue creating amazing AI videos.
                 </p>
                 <button
                   onClick={onUpgrade}
-                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-300"
+                  className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-full font-semibold hover:from-yellow-600 hover:to-orange-600 transition-all duration-300"
                 >
                   View Pricing Plans
                 </button>
@@ -241,10 +241,10 @@ export const AvatarCreator: React.FC<AvatarCreatorProps> = ({
                 }`}
               >
                 {freeVideoUsed 
-                  ? 'Upgrade Required' 
+                  ? 'Upgrade to Continue' 
                   : isGenerating 
                   ? 'Generating...' 
-                  : 'Generate Free Video (5s)'
+                  : 'Generate AI Video'
                 }
                 {!isGenerating && <ArrowRight className="h-5 w-5 ml-2" />}
               </button>

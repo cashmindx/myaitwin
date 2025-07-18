@@ -78,15 +78,15 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
 
           {/* Free Video Used Warning */}
           {freeVideoUsed && (
-            <div className="mt-6 bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
+            <div className="mt-6 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6">
               <div className="text-center">
-                <h4 className="text-red-300 font-bold mb-2">🚨 Free Video Used!</h4>
-                <p className="text-red-300/80 text-sm mb-4">
-                  You've used your 1 free video (5 seconds). To create more videos, please upgrade to a paid plan.
+                <h4 className="text-yellow-300 font-bold mb-2">⚡ Monthly Limit Reached!</h4>
+                <p className="text-yellow-300/80 text-sm mb-4">
+                  You've reached your monthly generation limit. Upgrade to continue creating amazing AI videos.
                 </p>
                 <button
                   onClick={onUpgrade}
-                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-300"
+                  className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-full font-semibold hover:from-yellow-600 hover:to-orange-600 transition-all duration-300"
                 >
                   Upgrade Now to Continue
                 </button>
@@ -129,16 +129,16 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
           }`}>
             <div className="text-center mb-6">
               <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                freeVideoUsed ? 'bg-red-500/20' : 'bg-yellow-500/20'
+                freeVideoUsed ? 'bg-yellow-500/20' : 'bg-purple-500/20'
               }`}>
-                <Crown className={`h-8 w-8 ${freeVideoUsed ? 'text-red-400' : 'text-yellow-400'}`} />
+               <Crown className={`h-8 w-8 ${freeVideoUsed ? 'text-yellow-400' : 'text-purple-400'}`} />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
                 {freeVideoUsed ? 'Upgrade Required!' : 'Upgrade to Pro'}
               </h3>
               <p className="text-white/70">
                 {freeVideoUsed 
-                  ? 'Your free video is used. Upgrade to continue creating!' 
+                  ? 'Monthly limit reached. Upgrade to continue creating!' 
                   : 'Unlock premium features and higher quality'
                 }
               </p>
@@ -171,7 +171,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
               onClick={onUpgrade}
               className={`w-full px-6 py-4 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
                 freeVideoUsed
-                  ? 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 animate-pulse'
+                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 animate-pulse'
                   : 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
               }`}
             >
@@ -185,7 +185,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
               <div className="flex justify-between">
                 <span>Plan:</span>
                 <span className={freeVideoUsed ? 'text-red-400 font-bold' : 'text-green-400'}>
-                  {freeVideoUsed ? 'Free (Used)' : 'Free Trial'}
+                  {freeVideoUsed ? 'Starter (Limit Reached)' : 'Starter Plan'}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -194,7 +194,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
               </div>
               <div className="flex justify-between">
                 <span>Duration:</span>
-                <span className="text-red-400 font-bold">5 seconds (Max)</span>
+                <span className="text-green-400">Up to 60 seconds</span>
               </div>
               <div className="flex justify-between">
                 <span>Format:</span>
@@ -202,11 +202,11 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
               </div>
               <div className="flex justify-between">
                 <span>Quality:</span>
-                <span>Basic (Free)</span>
+                <span>Standard (HD)</span>
               </div>
               <div className="flex justify-between">
                 <span>Watermark:</span>
-                <span className="text-yellow-400">Yes</span>
+                <span className="text-yellow-400">Yes (Starter)</span>
               </div>
             </div>
           </div>

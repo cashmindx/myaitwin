@@ -9,80 +9,56 @@ interface PricingProps {
 export const Pricing: React.FC<PricingProps> = ({ onBack, onPayment }) => {
   const plans = [
     {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for trying out AI Twin',
+      name: 'Starter',
+      price: 'Free',
+      period: '',
+      description: 'For trying things out',
       features: [
-        '1 video generation only',
-        '5 seconds maximum duration',
-        '720p resolution',
-        'Basic voice models',
-        'Standard processing',
-        'Community support',
-      ],
-      limitations: [
-        'Watermark included',
-        'Limited to 5 seconds',
-        'Basic facial animation',
-        'One-time use only',
-        'Must upgrade after first video',
+        '5 Generations / month',
+        'Standard Resolution (HD)',
+        'Watermarked Images',
       ],
       popular: false,
       icon: Zap,
-      buttonText: 'Try Free',
-      highlight: 'Only 1 video allowed',
+      buttonText: 'Get Started',
+      highlight: '5 generations monthly',
     },
     {
       name: 'Pro',
       price: '$15',
-      period: 'month',
-      description: 'Ideal for creators and professionals',
+      period: '',
+      description: 'For aspiring creators',
       features: [
-        '50 videos per month',
-        '4K resolution',
-        'Premium voice models',
-        'Advanced facial animation',
-        'Priority processing',
-        'Commercial license',
-        'No watermark',
-        'Up to 2 minutes per video',
-        'Emotion control',
-        'Background replacement',
+        '50 Generations / month',
+        'High Resolution (4K)',
+        'No Watermarks',
+        'Priority Support',
       ],
       popular: true,
       icon: Crown,
-      buttonText: 'Choose Pro',
-      highlight: '50 videos monthly',
+      buttonText: 'Get Started',
+      highlight: '50 generations monthly',
     },
     {
       name: 'Studio',
       price: '$40',
-      period: 'month',
-      description: 'For power users and businesses',
+      period: '',
+      description: 'For power users',
       features: [
-        '200 videos per month',
-        '8K resolution',
+        '200 Generations / month',
+        'Highest Resolution (8K)',
         'All Pro features',
-        'Team collaboration',
-        'Custom branding',
-        'API access',
-        'Priority support',
-        'Custom voice training',
-        'Batch processing',
-        'Advanced analytics',
-        'White-label solution',
         'Early access to new features',
       ],
       popular: false,
       icon: Star,
-      buttonText: 'Choose Studio',
-      highlight: '200 videos monthly',
+      buttonText: 'Get Started',
+      highlight: '200 generations monthly',
     },
   ];
 
   const handlePayment = (planName: string, price: string) => {
-    if (planName === 'Free') {
+    if (planName === 'Starter') {
       // For free plan, just close pricing and go back to creator
       onBack();
       return;
@@ -116,15 +92,8 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onPayment }) => {
               Choose Your Epic Experience
             </h1>
             <p className="text-xl text-white/70 max-w-2xl mx-auto mb-6">
-              Start for free with 1 video (5 seconds), then upgrade for unlimited creation.
+              Start for free and upgrade for higher resolution and more generations.
             </p>
-            
-            {/* Important Notice */}
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 max-w-2xl mx-auto">
-              <p className="text-red-300 font-medium">
-                ⚠️ Free Plan: After using your 1 free video, you must upgrade to continue creating
-              </p>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -166,7 +135,7 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onPayment }) => {
                     <p className="text-white/70 mb-4">{plan.description}</p>
                     <div className="mb-4">
                       <span className="text-4xl font-bold text-white">{plan.price}</span>
-                      <span className="text-white/60">/{plan.period}</span>
+                      {plan.period && <span className="text-white/60">/{plan.period}</span>}
                     </div>
                   </div>
 
@@ -174,16 +143,9 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onPayment }) => {
                     {plan.features.map((feature, index) => (
                       <div key={index} className="flex items-center text-white/80">
                         <Check className="h-5 w-5 text-green-400 mr-3 flex-shrink-0" />
-                        <span className={feature.includes('1 video generation only') ? 'font-bold text-red-300' : ''}>
+                        <span>
                           {feature}
                         </span>
-                      </div>
-                    ))}
-                    
-                    {plan.limitations?.map((limitation, index) => (
-                      <div key={index} className="flex items-center text-white/60">
-                        <X className="h-5 w-5 text-red-400 mr-3 flex-shrink-0" />
-                        <span className="text-sm font-medium">{limitation}</span>
                       </div>
                     ))}
                   </div>
@@ -193,22 +155,11 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onPayment }) => {
                     className={`w-full py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
                       plan.popular
                         ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600'
-                        : plan.name === 'Free'
-                        ? 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'
-                        : 'bg-white/20 text-white hover:bg-white/30'
+                        : 'bg-white/20 text-white hover:bg-white/30 border border-white/20'
                     }`}
                   >
                     {plan.buttonText}
                   </button>
-
-                  {/* Free Plan Warning */}
-                  {plan.name === 'Free' && (
-                    <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                      <p className="text-yellow-300 text-xs text-center font-medium">
-                        🚨 After 1 video, upgrade required to continue
-                      </p>
-                    </div>
-                  )}
                 </div>
               );
             })}
@@ -219,34 +170,13 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onPayment }) => {
             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
               <h3 className="text-xl font-bold text-white mb-4">Secure Payment with Yoco</h3>
               <p className="text-white/70 mb-4">
-                Pay securely with your credit or debit card. All payments processed in USD.
+                Pay securely with your credit or debit card. All payments processed securely.
               </p>
               <div className="flex justify-center items-center space-x-4 text-white/60">
                 <span>💳 Visa</span>
                 <span>💳 Mastercard</span>
                 <span>💳 American Express</span>
                 <span>🔒 SSL Secured</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Upgrade Notice */}
-          <div className="mt-8 bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-2xl p-6 border border-red-500/20">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-white mb-4">⚡ Important: Free Plan Limitation</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-semibold mb-2">1️⃣ Step 1</h4>
-                  <p className="text-white/70 text-sm">Create your first 5-second video for FREE</p>
-                </div>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-semibold mb-2">2️⃣ Step 2</h4>
-                  <p className="text-white/70 text-sm">After first video, choose a paid plan</p>
-                </div>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-semibold mb-2">3️⃣ Step 3</h4>
-                  <p className="text-white/70 text-sm">Unlock unlimited video creation</p>
-                </div>
               </div>
             </div>
           </div>
