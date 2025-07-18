@@ -4,9 +4,10 @@ import { VideoModal } from './VideoModal';
 
 interface HeroProps {
   onGetStarted: () => void;
+  onViewFeatures: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
+export const Hero: React.FC<HeroProps> = ({ onGetStarted, onViewFeatures }) => {
   const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
   const [isMuted, setIsMuted] = React.useState(true);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
@@ -138,8 +139,31 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
           </h1>
           
           <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Transform your photo and voice into a lifelike digital persona. Create personalized videos that speak in your tone and style.
+            Perfect for shy individuals who need to make speeches or presentations. Transform your photo and voice into a confident AI Twin that delivers your message with perfect clarity and confidence.
           </p>
+          
+          {/* Key Benefits for Shy People */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 mb-8 max-w-3xl mx-auto border border-white/10">
+            <h3 className="text-xl font-semibold text-white mb-4">Why My AI Twin is Perfect for You:</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                <span className="text-white/80">Overcome stage fright and social anxiety</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <span className="text-white/80">Deliver presentations with confidence</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                <span className="text-white/80">Practice speeches in private</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                <span className="text-white/80">Create professional video messages</span>
+              </div>
+            </div>
+          </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button
@@ -150,7 +174,7 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
               Start Creating
             </button>
             <button className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-full text-lg font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20">
-              Watch Demo
+              <span onClick={onViewFeatures}>View Features</span>
             </button>
           </div>
           

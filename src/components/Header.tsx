@@ -3,9 +3,10 @@ import { Sparkles, Github } from 'lucide-react';
 
 interface HeaderProps {
   onGetStarted: () => void;
+  onViewFeatures?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onGetStarted }) => {
+export const Header: React.FC<HeaderProps> = ({ onGetStarted, onViewFeatures }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-lg border-b border-white/10">
       <div className="container mx-auto px-4 py-4">
@@ -21,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ onGetStarted }) => {
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
+            <button onClick={onViewFeatures} className="text-white/80 hover:text-white transition-colors">Features</button>
             <a href="#pricing" className="text-white/80 hover:text-white transition-colors">Pricing</a>
             <a href="#about" className="text-white/80 hover:text-white transition-colors">About</a>
           </nav>

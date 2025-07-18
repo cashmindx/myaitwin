@@ -41,19 +41,32 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ isGenerating, onUpgr
         <div>
           <div className="bg-black/50 rounded-2xl p-8 border border-white/20">
             <div className="aspect-video bg-gradient-to-br from-purple-900 to-blue-900 rounded-lg flex items-center justify-center relative overflow-hidden">
-              <img
-                src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=400"
-                alt="AI Twin Preview"
+              <video
                 className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                controls
+                poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=400"
+                onLoadedData={() => {
+                  console.log('Video loaded successfully');
+                }}
+                onError={(e) => {
+                  console.error('Video loading error:', e);
+                }}
+              >
+                <source src="/generated-ai-twin-video.mp4" type="video/mp4" />
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              
+              {!isPlaying && (
+                <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
                   className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
                 >
                   <Play className="h-10 w-10 text-white ml-1" />
                 </button>
-              </div>
+                </div>
+              )}
               
               {/* Gender-appropriate avatar indicator */}
               <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">

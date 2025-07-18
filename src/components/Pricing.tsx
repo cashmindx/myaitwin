@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ArrowLeft, Crown, Zap, Star } from 'lucide-react';
+import { Check, ArrowLeft, Crown, Zap, Star, X } from 'lucide-react';
 
 interface PricingProps {
   onBack: () => void;
@@ -13,7 +13,8 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
       period: 'forever',
       description: 'Perfect for trying out AI Twin',
       features: [
-        '3 videos per month',
+        '1 video generation only',
+        '5 seconds maximum duration',
         '720p resolution',
         'Basic voice models',
         'Standard processing',
@@ -21,37 +22,44 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
       ],
       limitations: [
         'Watermark included',
-        'Limited to 30 seconds',
+        'Limited to 5 seconds',
         'Basic facial animation',
+        'One-time use only',
       ],
       popular: false,
       icon: Zap,
+      buttonText: 'Try Free',
     },
     {
       name: 'Pro',
-      price: '$29',
+      price: '$15',
       period: 'month',
       description: 'Ideal for creators and professionals',
       features: [
-        'Unlimited videos',
+        '50 videos per month',
         '4K resolution',
         'Premium voice models',
         'Advanced facial animation',
         'Priority processing',
         'Commercial license',
         'No watermark',
-        'Up to 5 minutes per video',
+        'Up to 2 minutes per video',
+        'Emotion control',
+        'Background replacement',
       ],
       popular: true,
       icon: Crown,
+      buttonText: 'Choose Pro',
     },
     {
-      name: 'Enterprise',
-      price: '$99',
+      name: 'Studio',
+      price: '$40',
       period: 'month',
-      description: 'For teams and businesses',
+      description: 'For power users and businesses',
       features: [
-        'Everything in Pro',
+        '200 videos per month',
+        '8K resolution',
+        'All Pro features',
         'Team collaboration',
         'Custom branding',
         'API access',
@@ -59,15 +67,23 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
         'Custom voice training',
         'Batch processing',
         'Advanced analytics',
+        'White-label solution',
+        'Early access to new features',
       ],
       popular: false,
       icon: Star,
+      buttonText: 'Choose Studio',
     },
   ];
 
-  const handlePayment = (planName: string) => {
-    // Here you would integrate with Stripe or another payment provider
-    console.log(`Payment for ${planName} plan`);
+  const handleYocoPayment = (planName: string, price: string) => {
+    // Yoco payment integration will be handled here
+    console.log(`Initiating Yoco payment for ${planName} plan - ${price}`);
+    
+    // This will redirect to Yoco payment page or open Yoco modal
+    if (planName !== 'Free') {
+      window.open(`/payment/yoco?plan=${planName}&price=${price}`, '_blank');
+    }
   };
 
   return (
@@ -86,10 +102,10 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
 
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-white mb-4">
-              Choose Your Plan
+              Choose Your Epic Experience
             </h1>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Select the perfect plan for your AI Twin needs. Upgrade or downgrade anytime.
+              Start for free and upgrade for higher resolution and more generations.
             </p>
           </div>
 
@@ -135,41 +151,40 @@ export const Pricing: React.FC<PricingProps> = ({ onBack }) => {
                     
                     {plan.limitations?.map((limitation, index) => (
                       <div key={index} className="flex items-center text-white/60">
-                        <div className="w-5 h-5 mr-3 flex-shrink-0 flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white/40 rounded-full"></div>
-                        </div>
+                        <X className="h-5 w-5 text-red-400 mr-3 flex-shrink-0" />
                         <span className="text-sm">{limitation}</span>
                       </div>
                     ))}
                   </div>
 
                   <button
-                    onClick={() => handlePayment(plan.name)}
+                    onClick={() => handleYocoPayment(plan.name, plan.price)}
                     className={`w-full py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
                       plan.popular
                         ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600'
                         : 'bg-white/20 text-white hover:bg-white/30'
                     }`}
                   >
-                    {plan.name === 'Free' ? 'Get Started' : `Choose ${plan.name}`}
+                    {plan.buttonText}
                   </button>
                 </div>
               );
             })}
           </div>
 
-          <div className="mt-16 text-center">
-            <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Need a Custom Solution?
-              </h3>
-              <p className="text-white/70 mb-6 max-w-2xl mx-auto">
-                We offer tailored solutions for large enterprises with specific requirements.
-                Contact our team to discuss your needs.
+          {/* Payment Methods */}
+          <div className="mt-12 text-center">
+            <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+              <h3 className="text-xl font-bold text-white mb-4">Secure Payment with Yoco</h3>
+              <p className="text-white/70 mb-4">
+                Pay securely with your credit or debit card. All payments processed in USD.
               </p>
-              <button className="px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full hover:from-purple-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105">
-                Contact Sales
-              </button>
+              <div className="flex justify-center items-center space-x-4 text-white/60">
+                <span>💳 Visa</span>
+                <span>💳 Mastercard</span>
+                <span>💳 American Express</span>
+                <span>🔒 SSL Secured</span>
+              </div>
             </div>
           </div>
 

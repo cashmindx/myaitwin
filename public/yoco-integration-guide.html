@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoco Payment Integration Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .code { background: #f4f4f4; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .step { margin: 20px 0; padding: 15px; border-left: 4px solid #007cba; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Yoco Payment Integration Guide for My AI Twin</h1>
+    
+    <div class="step">
+        <h2>Step 1: Create Yoco Account</h2>
+        <p>1. Visit <a href="https://www.yoco.com" target="_blank">yoco.com</a></p>
+        <p>2. Sign up for a business account</p>
+        <p>3. Complete KYC verification</p>
+        <p>4. Get your API keys from the dashboard</p>
+    </div>
+
+    <div class="step">
+        <h2>Step 2: Environment Variables</h2>
+        <p>Add these to your .env file:</p>
+        <div class="code">
+YOCO_SECRET_KEY=sk_test_your_secret_key_here
+YOCO_PUBLIC_KEY=pk_test_your_public_key_here
+YOCO_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 3: Install Yoco SDK</h2>
+        <div class="code">
+npm install @yoco/yoco-sdk-web
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 4: Frontend Integration</h2>
+        <p>Add this to your payment component:</p>
+        <div class="code">
+import { YocoSDK } from '@yoco/yoco-sdk-web';
+
+const yoco = new YocoSDK({
+    publicKey: process.env.REACT_APP_YOCO_PUBLIC_KEY
+});
+
+const handlePayment = async (amount, currency = 'USD') => {
+    try {
+        const result = await yoco.showPopup({
+            amountInCents: amount * 100,
+            currency: currency,
+            name: 'My AI Twin',
+            description: `${planName} Plan Subscription`,
+            image: 'https://your-domain.com/logo.png',
+            locale: 'en',
+            allowRememberMe: false
+        });
+        
+        if (result.error) {
+            console.error('Payment failed:', result.error);
+        } else {
+            // Send token to your backend
+            await processPayment(result.id);
+        }
+    } catch (error) {
+        console.error('Payment error:', error);
+    }
+};
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 5: Backend Processing</h2>
+        <p>Create an API endpoint to process payments:</p>
+        <div class="code">
+// /api/process-payment
+const yoco = require('yoco');
+
+app.post('/api/process-payment', async (req, res) => {
+    try {
+        const { token, amount, plan } = req.body;
+        
+        const charge = await yoco.charges.create({
+            token: token,
+            amountInCents: amount * 100,
+            currency: 'USD',
+            metadata: {
+                plan: plan,
+                userId: req.user.id
+            }
+        });
+        
+        if (charge.status === 'successful') {
+            // Update user subscription
+            await updateUserSubscription(req.user.id, plan);
+            res.json({ success: true, chargeId: charge.id });
+        } else {
+            res.status(400).json({ error: 'Payment failed' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 6: Webhook Setup</h2>
+        <p>Set up webhooks for payment confirmations:</p>
+        <div class="code">
+// /api/yoco-webhook
+app.post('/api/yoco-webhook', (req, res) => {
+    const signature = req.headers['x-yoco-signature'];
+    const payload = JSON.stringify(req.body);
+    
+    // Verify webhook signature
+    const expectedSignature = crypto
+        .createHmac('sha256', process.env.YOCO_WEBHOOK_SECRET)
+        .update(payload)
+        .digest('hex');
+    
+    if (signature === expectedSignature) {
+        const event = req.body;
+        
+        switch (event.type) {
+            case 'payment.succeeded':
+                // Handle successful payment
+                handleSuccessfulPayment(event.data);
+                break;
+            case 'payment.failed':
+                // Handle failed payment
+                handleFailedPayment(event.data);
+                break;
+        }
+        
+        res.status(200).send('OK');
+    } else {
+        res.status(400).send('Invalid signature');
+    }
+});
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 7: Testing</h2>
+        <p>Use these test card numbers:</p>
+        <ul>
+            <li><strong>Success:</strong> 4000000000000002</li>
+            <li><strong>Decline:</strong> 4000000000000069</li>
+            <li><strong>Insufficient Funds:</strong> 4000000000000341</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>Step 8: Go Live</h2>
+        <p>1. Switch to live API keys</p>
+        <p>2. Update webhook URLs</p>
+        <p>3. Test with real small amounts</p>
+        <p>4. Monitor transactions in Yoco dashboard</p>
+    </div>
+
+    <h2>💡 Pro Tips</h2>
+    <ul>
+        <li>Always validate payments on the server side</li>
+        <li>Store transaction IDs for refunds</li>
+        <li>Implement proper error handling</li>
+        <li>Use HTTPS for all payment endpoints</li>
+        <li>Log all payment attempts for debugging</li>
+    </ul>
+
+    <h2>📞 Support</h2>
+    <p>Yoco Support: <a href="mailto:support@yoco.com">support@yoco.com</a></p>
+    <p>Documentation: <a href="https://developer.yoco.com" target="_blank">developer.yoco.com</a></p>
+</body>
+</html>
