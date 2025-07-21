@@ -1,3 +1,4 @@
+import React from "react";
 import AvatarPreview from "./components/AvatarPreview";
 
 const App: React.FC = () => {
