@@ -1,5 +1,3 @@
-// netlify/functions/upload-image.js
-
 export async function handler(event) {
   try {
     const { fileBase64, publicId } = JSON.parse(event.body);
