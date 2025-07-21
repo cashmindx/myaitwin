@@ -1,10 +1,9 @@
 // netlify/functions/generate-video.js
 
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-exports.handler = async function (event) {
+export async function handler(event) {
   try {
-    // Parse the image URL from the frontend request
     const { imageUrl } = JSON.parse(event.body);
 
     if (!imageUrl) {
@@ -14,7 +13,6 @@ exports.handler = async function (event) {
       };
     }
 
-    // Send request to D-ID API to create video
     const response = await fetch("https://api.d-id.com/talks", {
       method: "POST",
       headers: {
@@ -32,7 +30,6 @@ exports.handler = async function (event) {
 
     const data = await response.json();
 
-    // Handle errors from D-ID API
     if (!response.ok) {
       return {
         statusCode: response.status,
@@ -40,16 +37,14 @@ exports.handler = async function (event) {
       };
     }
 
-    // Success: return the video data
     return {
       statusCode: 200,
       body: JSON.stringify(data),
     };
-  } catch (err) {
-    // Handle internal errors
+  } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: error.message }),
     };
   }
-};
+}
