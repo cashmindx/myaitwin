@@ -1,7 +1,5 @@
 // netlify/functions/generate-video.js
 
-import fetch from "node-fetch";
-
 export async function handler(event) {
   try {
     const { imageUrl } = JSON.parse(event.body);
@@ -23,9 +21,9 @@ export async function handler(event) {
         source_url: imageUrl,
         script: {
           type: "text",
-          input: "Hey Herbert, your cinematic avatar is now talking!",
-        },
-      }),
+          input: "Hey Herbert, your cinematic avatar is now talking!"
+        }
+      })
     });
 
     const data = await response.json();
@@ -39,12 +37,13 @@ export async function handler(event) {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     };
+
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({ error: error.message })
     };
   }
 }
