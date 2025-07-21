@@ -1,30 +1,30 @@
-import { v2 as cloudinary } from "cloudinary";
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// netlify/functions/upload-image.js
 
 export async function handler(event) {
   try {
-    const { imageUrl } = JSON.parse(event.body); // assuming URL is already uploaded
+    const { fileBase64, publicId } = JSON.parse(event.body);
 
-    const result = await cloudinary.uploader.upload(imageUrl, {
-      folder: "avatars",
-      use_filename: true,
-      unique_filename: false,
-      overwrite: true,
+    const formData = new FormData();
+    formData.append("file", fileBase64);
+    formData.append("upload_preset", "YOUR_UPLOAD_PRESET");
+    formData.append("public_id", publicId);
+
+    const res = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
+      method: "POST",
+      body: formData
     });
 
+    const data = await res.json();
+
     return {
-      statusCode: 200,
-      body: JSON.stringify({ imageUrl: result.secure_url }),
+      statusCode: res.ok ? 200 : res.status,
+      body: JSON.stringify(data)
     };
+
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: err.message })
     };
   }
 }
