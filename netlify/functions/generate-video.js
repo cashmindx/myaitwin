@@ -7,7 +7,7 @@ export async function handler(event) {
     if (!imageUrl) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Missing imageUrl in request body." }),
+        body: JSON.stringify({ error: "Missing imageUrl in request body." })
       };
     }
 
@@ -15,7 +15,7 @@ export async function handler(event) {
       method: "POST",
       headers: {
         Authorization: "Bearer dGhla25pZ2h0bWVudG9yQGdtYWlsLmNvbQ:yBOob8F_U3g7m1o18KqhW",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         source_url: imageUrl,
@@ -31,7 +31,7 @@ export async function handler(event) {
     if (!response.ok) {
       return {
         statusCode: response.status,
-        body: JSON.stringify({ error: data }),
+        body: JSON.stringify({ error: data })
       };
     }
 
