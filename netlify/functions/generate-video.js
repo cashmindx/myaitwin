@@ -1,5 +1,3 @@
-// netlify/functions/generate-video.js
-
 export async function handler(event) {
   try {
     const { imageUrl } = JSON.parse(event.body);
@@ -7,7 +5,7 @@ export async function handler(event) {
     if (!imageUrl) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Missing imageUrl" })
+        body: JSON.stringify({ error: "Missing imageUrl in request body." })
       };
     }
 
@@ -21,7 +19,11 @@ export async function handler(event) {
         source_url: imageUrl,
         script: {
           type: "text",
-          input: "Hey Herbert, your cinematic avatar is now talking!"
+          input: "Hi! This is your myAITwin avatar speaking now.",
+          provider: {
+            type: "microsoft",
+            voice_id: "en-US-JennyNeural"
+          }
         }
       })
     });
