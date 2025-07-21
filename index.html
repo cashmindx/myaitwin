@@ -1,18 +1,59 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My AI Twin - Create Your Digital Avatar</title>
-    <meta name="description" content="Transform your photo and voice into a lifelike digital persona with My AI Twin. Create personalized videos with AI-powered avatars." />
-    <meta name="keywords" content="AI, Avatar, Digital Twin, Video Generation, Voice Cloning, Personalized Content" />
-    <meta property="og:title" content="My AI Twin - Create Your Digital Avatar" />
-    <meta property="og:description" content="Transform your photo and voice into a lifelike digital persona with AI technology." />
+
+    <title>myAITwin • Bring Your Avatar to Life</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.png" />
+
+    <!-- SEO Meta -->
+    <meta name="description" content="Create a lifelike digital twin powered by AI. Upload your photo, generate voice, and animate your avatar in seconds." />
+    <meta name="keywords" content="AI Twin, Avatar Generator, Digital Identity, AI Video, Personal Avatar, Lip Sync, Cloudinary, D-ID" />
+
+    <!-- Open Graph Meta -->
+    <meta property="og:title" content="myAITwin • Create Your AI-Powered Avatar" />
+    <meta property="og:description" content="Transform a static photo into a lifelike, speaking digital twin. Cinematic avatar generation powered by AI." />
+    <meta property="og:image" content="/meta-banner.png" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yourdomain.com" />
+
+    <!-- Twitter Meta -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="My AI Twin - Create Your Digital Avatar" />
-    <meta name="twitter:description" content="Transform your photo and voice into a lifelike digital persona with AI technology." />
+    <meta name="twitter:title" content="myAITwin • Create Your AI Avatar" />
+    <meta name="twitter:description" content="Transform your image and voice into a cinematic avatar using AI." />
+    <meta name="twitter:image" content="/meta-banner.png" />
+
+    <!-- Fonts & Styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Raleway:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Optional: Cinematic background styles -->
+    <style>
+      body {
+        margin: 0;
+        font-family: "Raleway", sans-serif;
+        background: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);
+        color: white;
+        overflow: hidden;
+      }
+
+      #root::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("/hero-cinematic.jpg");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.08;
+        pointer-events: none;
+        z-index: -1;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
